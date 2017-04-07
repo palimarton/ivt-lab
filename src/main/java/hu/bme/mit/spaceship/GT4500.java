@@ -42,14 +42,14 @@ public class GT4500 implements SpaceShip {
       case SINGLE:
         if (wasPrimaryFiredLast) {
           // try to fire the secondary first
-          if (! secondaryTorpedoStore.isEmpty()) {
+          if (isTorpedoStoreAvailable(secondaryTorpedoStore)) {
             firingSuccess = secondaryTorpedoStore.fire(1);
             wasPrimaryFiredLast = false;
           }
           else {
             // although primary was fired last time, but the secondary is empty
             // thus try to fire primary again
-            if (! primaryTorpedoStore.isEmpty()) {
+            if (isTorpedoStoreAvailable(primaryTorpedoStore)) {
               firingSuccess = primaryTorpedoStore.fire(1);
               wasPrimaryFiredLast = true;
             }
@@ -59,14 +59,14 @@ public class GT4500 implements SpaceShip {
         }
         else {
           // try to fire the primary first
-          if (! primaryTorpedoStore.isEmpty()) {
+          if (isTorpedoStoreAvailable(primaryTorpedoStore)) {
             firingSuccess = primaryTorpedoStore.fire(1);
             wasPrimaryFiredLast = true;
           }
           else {
             // although secondary was fired last time, but primary is empty
             // thus try to fire secondary again
-            if (! secondaryTorpedoStore.isEmpty()) {
+            if (isTorpedoStoreAvailable(secondaryTorpedoStore)) {
               firingSuccess = secondaryTorpedoStore.fire(1);
               wasPrimaryFiredLast = false;
             }
@@ -79,7 +79,7 @@ public class GT4500 implements SpaceShip {
       case ALL:
         // try to fire both of the torpedos
         //TODO implement feature
-        if (!primaryTorpedoStore.isEmpty() && !secondaryTorpedoStore.isEmpty()) {
+        if (isTorpedoStoreAvailable(primaryTorpedoStore) && isTorpedoStoreAvailable(secondaryTorpedoStore)) {
           firingSuccess = (primaryTorpedoStore.fire(1) &&
             secondaryTorpedoStore.fire(1));
         }
@@ -90,6 +90,10 @@ public class GT4500 implements SpaceShip {
     }
 
     return firingSuccess;
+  }
+
+  private boolean isTorpedoStoreAvailable(TorpedoStore torpedoStore) {
+    return !torpedoStore.isEmpty();
   }
 
 }
