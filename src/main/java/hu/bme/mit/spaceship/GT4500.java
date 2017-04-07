@@ -38,55 +38,48 @@ public class GT4500 implements SpaceShip {
 
     boolean firingSuccess = false;
 
-    switch (firingMode) {
-      case SINGLE:
-        if (wasPrimaryFiredLast) {
-          // try to fire the secondary first
-          if (isTorpedoStoreAvailable(secondaryTorpedoStore)) {
-            firingSuccess = secondaryTorpedoStore.fire(1);
-            wasPrimaryFiredLast = false;
-          }
-          else {
-            // although primary was fired last time, but the secondary is empty
-            // thus try to fire primary again
-            if (isTorpedoStoreAvailable(primaryTorpedoStore)) {
-              firingSuccess = primaryTorpedoStore.fire(1);
-              wasPrimaryFiredLast = true;
-            }
-
-            // if both of the stores are empty, nothing can be done, return failure
-          }
+    if (firingMode == SINGLE) {
+      if (wasPrimaryFiredLast) {
+        // try to fire the secondary first
+        if (isTorpedoStoreAvailable(secondaryTorpedoStore)) {
+          firingSuccess = secondaryTorpedoStore.fire(1);
+          wasPrimaryFiredLast = false;
         }
         else {
-          // try to fire the primary first
+          // although primary was fired last time, but the secondary is empty
+          // thus try to fire primary again
           if (isTorpedoStoreAvailable(primaryTorpedoStore)) {
             firingSuccess = primaryTorpedoStore.fire(1);
             wasPrimaryFiredLast = true;
           }
-          else {
-            // although secondary was fired last time, but primary is empty
-            // thus try to fire secondary again
-            if (isTorpedoStoreAvailable(secondaryTorpedoStore)) {
-              firingSuccess = secondaryTorpedoStore.fire(1);
-              wasPrimaryFiredLast = false;
-            }
 
-            // if both of the stores are empty, nothing can be done, return failure
+          // if both of the stores are empty, nothing can be done, return failure
+        }
+      }
+      else {
+        // try to fire the primary first
+        if (isTorpedoStoreAvailable(primaryTorpedoStore)) {
+          firingSuccess = primaryTorpedoStore.fire(1);
+          wasPrimaryFiredLast = true;
+        }
+        else {
+          // although secondary was fired last time, but primary is empty
+          // thus try to fire secondary again
+          if (isTorpedoStoreAvailable(secondaryTorpedoStore)) {
+            firingSuccess = secondaryTorpedoStore.fire(1);
+            wasPrimaryFiredLast = false;
           }
-        }
-        break;
 
-      case ALL:
-        // try to fire both of the torpedos
-        //TODO implement feature
-        if (isTorpedoStoreAvailable(primaryTorpedoStore) && isTorpedoStoreAvailable(secondaryTorpedoStore)) {
-          firingSuccess = (primaryTorpedoStore.fire(1) &&
-            secondaryTorpedoStore.fire(1));
+          // if both of the stores are empty, nothing can be done, return failure
         }
-        break;
-      default:
-        firingSuccess = false;
-        break;
+      }
+    } else if (firingMode == ALL) {
+      // try to fire both of the torpedos
+      //TODO implement feature
+      if (isTorpedoStoreAvailable(primaryTorpedoStore) && isTorpedoStoreAvailable(secondaryTorpedoStore)) {
+        firingSuccess = (primaryTorpedoStore.fire(1) &&
+          secondaryTorpedoStore.fire(1));
+      }
     }
 
     return firingSuccess;
